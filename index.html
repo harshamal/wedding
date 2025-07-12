@@ -1,0 +1,314 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aruni weds Harshamal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lora', serif;
+            background-color: #fffaf7;
+            color: #333333;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .hero-image {
+            background-image: url('/hero.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+        }
+
+            .hero-image::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+            }
+
+        .section-divider {
+            width: 100px;
+            height: 2px;
+            background: #d4a5a5;
+            margin: 2rem auto;
+        }
+
+        .gallery-img {
+            transition: transform 0.3s ease;
+        }
+
+            .gallery-img:hover {
+                transform: scale(1.05);
+            }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+            .fade-in.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        .sticky-rsvp {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .search-input {
+            border: 1px solid #d4a5a5;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .guest-result {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+        }
+
+        .rsvp-button {
+            margin: 0.5rem;
+        }
+
+        .guest-count {
+            display: none;
+        }
+
+            .guest-count.visible {
+                display: inline-block;
+            }
+
+        .loading::after {
+            content: 'Loading...';
+            font-size: 0.8rem;
+            color: #d4a5a5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                 
+                    <h1 class="text-3xl font-playfair text-pink-800">Aruni & Harshamal</h1>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="#home" class="text-pink-700 hover:text-pink-500 font-medium transition">Home</a>
+                    <a href="#story" class="text-pink-700 hover:text-pink-500 font-medium transition">Our Story</a>
+                    <a href="#details" class="text-pink-700 hover:text-pink-500 font-medium transition">Details</a>
+                    <a href="#rsvp" class="text-pink-700 hover:text-pink-500 font-medium transition">RSVP</a>
+                    <a href="#gallery" class="text-pink-700 hover:text-pink-500 font-medium transition">Gallery</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-image flex items-center justify-center text-center text-white">
+        <div class="relative z-10 p-8 sm:p-12 bg-opacity-70 bg-black rounded-lg">
+            <h1 class="text-4xl sm:text-6xl font-playfair mb-4 text-pink-100">Aruni & Harshamal</h1>
+            <p class="text-lg sm:text-xl text-gray-200">7th August 2025 | Grand Ballroom Hilton Colombo</p>
+            <p id="countdown" class="text-md sm:text-lg text-gray-300 mt-4"></p>
+            <a href="#rsvp" class="mt-6 inline-block bg-pink-600 text-white py-3 px-8 rounded-lg hover:bg-pink-700 transition">RSVP Now</a>
+        </div>
+    </section>
+
+    <!-- Our Story Section -->
+    <section id="story" class="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8 fade-in">
+        <h2 class="text-4xl sm:text-5xl font-playfair text-center text-pink-800 mb-6">Our Story</h2>
+        <div class="section-divider"></div>
+        <p class="text-gray-600 max-w-3xl mx-auto text-center text-lg">
+            Aruni and Harshamal met on a sunny afternoon in 2020, and their connection was instant. From shared laughter over coffee to adventures across Sri Lanka, their love blossomed. Now, they’re ready to write the next chapter together. Join us to celebrate their journey of love.
+        </p>
+    </section>
+
+    <!-- Wedding Details Section -->
+    <section id="details" class="bg-gray-50 py-20 fade-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl sm:text-5xl font-playfair text-center text-pink-800 mb-6">Wedding Details</h2>
+            <div class="section-divider"></div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div>
+                    <h3 class="text-2xl font-bold text-pink-800">Date & Time</h3>
+                    <p class="mt-2 text-gray-600">7th August 2025 at 6:00 PM</p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-pink-800">Venue</h3>
+                    <p class="mt-2 text-gray-600">Grand Ballroom, Hilton Colombo, 2 Sir Chittampalam A Gardiner Mawatha, Colombo 00200, Sri Lanka</p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-pink-800">Dress Code</h3>
+                    <p class="mt-2 text-gray-600">Formal or Traditional Attire</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section id="rsvp" class="py-20 bg-white fade-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl sm:text-5xl font-playfair text-pink-800 mb-6">RSVP</h2>
+            <div class="section-divider"></div>
+            <p class="text-gray-600 max-w-2xl mx-auto mb-6 text-lg">
+                Find your invitation by searching your name or invite code below. Select your attendance and submit by 15th July 2025.
+            </p>
+            <input type="text" id="guestSearch" placeholder="Enter your name or invite code" class="search-input mb-6 text-gray-700">
+            <div id="guestResults" class="max-w-2xl mx-auto"></div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery Section -->
+    <section id="gallery" class="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8 fade-in">
+        <h2 class="text-4xl sm:text-5xl font-playfair text-center text-pink-800 mb-6">Our Moments</h2>
+        <div class="section-divider"></div>
+        <div class="columns-1 sm:columns-2 md:columns-3 gap-4">
+            <img src="/DSC_2556.jpg" alt="Moment 1" class="w-full h-auto object-cover rounded-lg mb-4 gallery-img">
+            <img src="/DSC_2425.jpg" alt="Moment 2" class="w-full h-auto object-cover rounded-lg mb-4 gallery-img">
+            <img src="/DSC_2536.jpg" alt="Moment 3" class="w-full h-auto object-cover rounded-lg mb-4 gallery-img">
+            <img src="/DSC_2551.jpg" alt="Moment 4" class="w-full h-auto object-cover rounded-lg mb-4 gallery-img">
+            <img src="/DSC_2555.jpg" alt="Moment 5" class="w-full h-auto object-cover rounded-lg mb-4 gallery-img">
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-pink-900 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-xl font-playfair">Aruni & Harshamal | 7th August 2025</p>
+            <p class="mt-2 text-sm">Crafted with love for our special day</p>
+        </div>
+    </footer>
+
+    <!-- Sticky RSVP Button -->
+    <a href="#rsvp" class="sticky-rsvp bg-pink-600 text-white py-3 px-6 rounded-full hover:bg-pink-700 transition text-sm sm:text-base">RSVP</a>
+
+    <!-- Scripts -->
+    <script>
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Fade-In Animation
+        const fadeInElements = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeInElements.forEach(el => observer.observe(el));
+
+        // Countdown Timer
+        const weddingDate = new Date('August 7, 2025 18:00:00').getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+            if (distance < 0) {
+                document.getElementById('countdown').innerText = 'Our big day has arrived!';
+                return;
+            }
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById('countdown').innerText = `${days} days, ${hours} hours, ${minutes} minutes until our big day!`;
+        }
+        setInterval(updateCountdown, 1000); // Update every second
+        updateCountdown();
+
+        // Guest Search and RSVP
+        const searchInput = document.getElementById('guestSearch');
+        const guestResults = document.getElementById('guestResults');
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzGtc1u8I4BiCY38jLIuMr-cRwushzQjWvuzDPHGc1HE71Z6oWx0KpatJSbCc_B84b0Ag/exec';
+
+        searchInput.addEventListener('input', async () => {
+            const query = searchInput.value.trim();
+            if (query.length < 2) {
+                guestResults.innerHTML = '';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiUrl}?query=${encodeURIComponent(query)}`);
+                const guests = await response.json();
+
+                guestResults.innerHTML = '';
+                if (guests.length === 0) {
+                    guestResults.innerHTML = '<p class="text-gray-600">No guests found. Please check your name or invite code.</p>';
+                    return;
+                }
+
+                guests.forEach(guest => {
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = 'guest-result flex flex-col sm:flex-row justify-between items-center';
+                    resultDiv.innerHTML = `
+                            <p class="text-gray-700 mb-2 sm:mb-0">${guest.name} (${guest.inviteCode}) - Current Status: ${guest.status}</p>
+                            <div>
+                                <input type="number" class="guest-count w-20 border border-gray-300 rounded p-1 mr-2" placeholder="Guests (0-2)" min="0" max="2">
+                                <button class="rsvp-button bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700" onclick="submitRSVP('${guest.inviteCode}', 'Yes', this)">Yes</button>
+                                <button class="rsvp-button bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700" onclick="submitRSVP('${guest.inviteCode}', 'No', this)">No</button>
+                            </div>
+                        `;
+                    guestResults.appendChild(resultDiv);
+                });
+            } catch (error) {
+                guestResults.innerHTML = '<p class="text-red-600">Error fetching guest list: ${error.message}. Please try again.</p>';
+            }
+        });
+
+        async function submitRSVP(inviteCode, status, button) {
+            const resultDiv = button.closest('.guest-result');
+            const guestCountInput = resultDiv.querySelector('.guest-count');
+            button.classList.add('loading');
+            button.disabled = true;
+
+            const guests = status === 'Yes' ? (parseInt(guestCountInput.value) || 0) : 0;
+            guestCountInput.classList.toggle('visible', status === 'Yes');
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ inviteCode, status, guests })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    resultDiv.innerHTML = `<p class="text-green-600">RSVP confirmed: ${status} (${guests} guests)</p>`;
+                } else {
+                    resultDiv.innerHTML = `<p class="text-red-600">${result.message}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="text-red-600">Error submitting RSVP: ${error.message}. Please try again.</p>`;
+            } finally {
+                button.classList.remove('loading');
+                button.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
