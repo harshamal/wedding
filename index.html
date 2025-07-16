@@ -19,7 +19,7 @@
         }
 
         .hero-image {
-            background-image: url('/DSC_2547.jpg');
+            background-image: url('https://hdblob1.blob.core.windows.net/synconic/DSC_2547.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -133,6 +133,31 @@
                 font-size: 2.5rem;
             }
         }
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .detail-card {
+            border: 1px solid #d4a5a5;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .detail-card:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
     </style>
 </head>
 <body>
@@ -141,6 +166,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
+                    <img src="/logo.jpg" alt="Wedding Logo" class="logo" style="width:50px; margin:10px; margin-left:0px !important;">
                     <h1 class="text-3xl font-playfair text-pink-800">Aruni & Harshamal</h1>
                 </div>
                 <div class="flex items-center space-x-6">
@@ -158,7 +184,9 @@
     <!-- Hero Section -->
     <section id="home" class="hero-image flex items-center justify-center text-center text-white">
         <div class="hero-content">
-            <h1 class="text-4xl sm:text-6xl font-playfair mb-4 text-pink-100">Aruni weds Harshamal</h1>
+            <h1 class="text-4xl sm:text-6xl font-playfair mb-4 text-pink-100 flex items-center justify-center gap-2">
+                Aruni <span class="text-pink-300 animate-pulse">♡</span> Harshamal
+            </h1>
             <p class="text-lg sm:text-xl text-gray-200">7th August 2025 | Grand Ballroom Hilton Colombo</p>
             <p id="countdown" class="text-md sm:text-lg text-gray-300 mt-4"></p>
             <a href="#rsvp" class="mt-6 inline-block bg-pink-600 text-white py-3 px-8 rounded-lg hover:bg-pink-700 transition">RSVP Now</a>
@@ -173,27 +201,69 @@
             Aruni and Harshamal met on a sunny afternoon in 2020, and their connection was instant. From shared laughter over coffee to adventures across Sri Lanka, their love blossomed. Now, they’re ready to write the next chapter together. Join us to celebrate their journey of love.
         </p>
     </section>-->
-
     <!-- Wedding Details Section -->
     <section id="details" class="bg-gray-50 py-20 fade-in">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-4xl sm:text-5xl font-playfair text-center text-pink-800 mb-6">Wedding Details</h2>
+            <h2 class="text-4xl sm:text-5xl font-playfair text-center text-pink-800 mb-6 relative">
+                Wedding Details
+                <span class="block w-16 h-1 bg-pink-300 mt-2 mx-auto"></span>
+            </h2>
             <div class="section-divider"></div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div>
-                    <h3 class="text-2xl font-bold text-pink-800">Date & Time</h3>
-                    <p class="mt-2 text-gray-600">7th August 2025 at 6:00 PM</p>
+                <div class="detail-card bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 opacity-0 animate-fade-in" style="animation-delay: 0.1s;">
+                    <h3 class="text-2xl font-bold text-pink-800 mb-2 flex items-center justify-center">
+                        <span class="mr-2 text-pink-300">📅</span> Date & Time
+                    </h3>
+                    <p class="text-gray-600">7th August 2025 at 6:00 PM</p>
                 </div>
-                <div>
-                    <h3 class="text-2xl font-bold text-pink-800">Venue</h3>
-                    <p class="mt-2 text-gray-600">Grand Ballroom, Hilton Colombo, 2 Sir Chittampalam A Gardiner Mawatha, Colombo 00200, Sri Lanka</p>
+                <div class="detail-card bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 opacity-0 animate-fade-in" style="animation-delay: 0.3s;">
+                    <h3 class="text-2xl font-bold text-pink-800 mb-2 flex items-center justify-center">
+                        <span class="mr-2 text-pink-300">🏛️</span> Venue
+                    </h3>
+                    <p class="text-gray-600">Grand Ballroom, Hilton Colombo, 2 Sir Chittampalam A Gardiner Mawatha, Colombo 00200, Sri Lanka</p>
                 </div>
-                <div>
-                    <h3 class="text-2xl font-bold text-pink-800">Dress Code</h3>
-                    <p class="mt-2 text-gray-600">Formal or Traditional Attire</p>
+                <div class="detail-card bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 opacity-0 animate-fade-in" style="animation-delay: 0.5s;">
+                    <h3 class="text-2xl font-bold text-pink-800 mb-2 flex items-center justify-center">
+                        <span class="mr-2 text-pink-300">👗</span> Dress Code
+                    </h3>
+                    <p class="text-gray-600">Formal or Traditional Attire</p>
+                </div>
+            </div>
+            <div class="mt-12 text-center opacity-0 animate-fade-in" style="animation-delay: 0.7s;">
+                <h3 class="text-2xl font-bold text-pink-800 mb-4">Find Us</h3>
+                <div class="max-w-4xl mx-auto">
+                    <iframe class="w-full h-96 rounded-lg border border-pink-300 shadow-sm" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.781395141506!2d79.84468391462114!3d6.93171119500062!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2599770171135%3A0x2696362ff7c93a76!2sHilton%20Ballroom!5e0!3m2!1sen!2slk!4v1731512345678!5m2!1sen!2slk" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <a href="https://www.google.com/maps/place/Hilton+Ballroom/@6.932165,79.8451322,16.5z/data=!4m6!3m5!1s0x3ae2599770171135:0x2696362ff7c93a76!8m2!3d6.931711!4d79.8446839!16s%2Fg%2F11gw36gs00?hl=en&entry=ttu&g_ep=EgoyMDI1MDcxMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="inline-block mt-4 text-pink-600 hover:text-pink-800 font-medium transition">Get Directions</a>
                 </div>
             </div>
         </div>
+        <style>
+            @keyframes fadeInUp {
+                0% {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .animate-fade-in {
+                animation: fadeInUp 0.6s ease-out forwards;
+            }
+
+            .detail-card {
+                border: 1px solid #d4a5a5;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+                .detail-card:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                }
+        </style>
     </section>
 
     <!-- RSVP Section -->
