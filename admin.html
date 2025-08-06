@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aruni & Harshamal - Admin Dashboard</title>
+    <link rel="icon" type="image/png" href="/logo.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Lora', serif;
+            background-color: #fffaf7;
+            color: #333333;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .section-divider {
+            width: 100px;
+            height: 2px;
+            background: #d4a5a5;
+            margin: 2rem auto;
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .rsvp-input {
+            border: 1px solid #d4a5a5;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            width: 100%;
+            max-width: 400px;
+            margin: 0.5rem auto;
+        }
+        .rsvp-button {
+            margin: 0.5rem;
+            background: #d4a5a5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: background 0.3s ease;
+        }
+        .rsvp-button:hover {
+            background: #c98f8f;
+        }
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #d4a5a5;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-left: 0.5rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .download-button {
+            background: #d4a5a5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        .download-button:hover {
+            background: #c98f8f;
+        }
+        .summary-card {
+            background: #fff;
+            border: 1px solid #d4a5a5;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .summary-card:hover {
+            transform: scale(1.05);
+        }
+        .guest-table th, .guest-table td {
+            border: 1px solid #d4a5a5;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .guest-table th {
+            background: #d4a5a5;
+            color: white;
+        }
+        @media (max-width: 640px) {
+            .logo { max-width: 100px; }
+            h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <img src="/logo.jpg" alt="Wedding Logo" class="logo" style="width:50px; margin:10px; margin-left:0px !important;">
+                    <h1 class="text-3xl font-playfair text-pink-800">Aruni & Harshamal - Admin</h1>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="index.html" class="text-pink-700 hover:text-pink-500 font-medium transition">Main Site</a>
+                    <a href="#dashboard" class="text-pink-700 hover:text-pink-500 font-medium transition">Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="py-20 bg-white fade-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl sm:text-5xl font-playfair text-center text-pink-800 mb-6">Admin Dashboard</h2>
+            <div class="section-divider"></div>
+            <div id="loading" class="text-gray-600 text-center mb-6 hidden">Loading guest data<span class="loading"></span></div>
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="summary-card text-center">
+                    <h3 class="text-xl font-bold text-pink-800 mb-2">Total Guests</h3>
+                    <p id="totalGuests" class="text-2xl text-gray-700">0</p>
+                </div>
+                <div class="summary-card text-center">
+                    <h3 class="text-xl font-bold text-pink-800 mb-2">Guests Present</h3>
+                    <p id="presentGuests" class="text-2xl text-gray-700">0</p>
+                </div>
+                <div class="summary-card text-center">
+                    <h3 class="text-xl font-bold text-pink-800 mb-2">Guests Not Present</h3>
+                    <p id="notPresentGuests" class="text-2xl text-gray-700">0</p>
+                </div>
+            </div>
+            <!-- Charts -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                <div class="bg-white p-6 rounded-lg border border-pink-300">
+                    <h3 class="text-xl font-bold text-pink-800 mb-4 text-center">Attendance Breakdown</h3>
+                    <canvas id="attendanceChart"></canvas>
+                </div>
+                <div class="bg-white p-6 rounded-lg border border-pink-300">
+                    <h3 class="text-xl font-bold text-pink-800 mb-4 text-center">Guests per Table</h3>
+                    <canvas id="tableChart"></canvas>
+                </div>
+            </div>
+            <!-- Guest List -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-pink-800 mb-4 text-center">Guest List</h3>
+                <input type="text" id="guestSearch" placeholder="Search by Name" class="rsvp-input mb-4 text-gray-700">
+                <a href="#" id="downloadReport" class="download-button inline-block mb-4">Download Guest List</a>
+                <table class="guest-table w-full border-collapse">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Table</th>
+                            <th>Attendance</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="guestTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="bg-pink-900 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-xl font-playfair">Aruni & Harshamal | 7th August 2025</p>
+            <p class="mt-2 text-sm">Admin Dashboard for Guest Management</p>
+        </div>
+    </footer>
+    <!-- Scripts -->
+    <script>
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        // Fade-In Animation
+        const fadeInElements = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeInElements.forEach(el => observer.observe(el));
+        // Guest Data and Charts
+        let seatData = [];
+        const loadingDiv = document.getElementById('loading');
+        const totalGuestsEl = document.getElementById('totalGuests');
+        const presentGuestsEl = document.getElementById('presentGuests');
+        const notPresentGuestsEl = document.getElementById('notPresentGuests');
+        const guestSearchInput = document.getElementById('guestSearch');
+        const guestTableBody = document.getElementById('guestTableBody');
+        const downloadButton = document.getElementById('downloadReport');
+        async function loadSeatData() {
+            loadingDiv.classList.remove('hidden');
+            try {
+                const response = await fetch('/seating.xlsx');
+                if (!response.ok) throw new Error('Failed to load seating.xlsx');
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+                seatData = jsonData.map(row => ({
+                    name: String(row.Name || ''),
+                    table: Number(row.Table || 0),
+                    attendance: Number(row.Attendance || 0)
+                }));
+                updateDashboard();
+                loadingDiv.classList.add('hidden');
+                downloadButton.classList.remove('hidden');
+            } catch (error) {
+                console.error('Error loading seating data:', error);
+                loadingDiv.classList.add('hidden');
+                guestTableBody.innerHTML = '<tr><td colspan="4" class="text-red-600 text-center">Error loading guest data. Please try again later.</td></tr>';
+            }
+        }
+        function updateDashboard() {
+            // Summary
+            const totalGuests = seatData.length;
+            const presentGuests = seatData.filter(g => g.attendance === 1).length;
+            const notPresentGuests = totalGuests - presentGuests;
+            totalGuestsEl.textContent = totalGuests;
+            presentGuestsEl.textContent = presentGuests;
+            notPresentGuestsEl.textContent = notPresentGuests;
+            // Attendance Pie Chart
+            const attendanceChart = new Chart(document.getElementById('attendanceChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Present', 'Not Present'],
+                    datasets: [{
+                        data: [presentGuests, notPresentGuests],
+                        backgroundColor: ['#d4a5a5', '#e5e7eb'],
+                        borderColor: '#fffaf7',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+            // Table Bar Chart
+            const tableCounts = {};
+            seatData.forEach(g => {
+                tableCounts[g.table] = (tableCounts[g.table] || 0) + 1;
+            });
+            const tableLabels = Object.keys(tableCounts).sort((a, b) => a - b);
+            const tableData = tableLabels.map(t => tableCounts[t]);
+            const tableChart = new Chart(document.getElementById('tableChart'), {
+                type: 'bar',
+                data: {
+                    labels: tableLabels,
+                    datasets: [{
+                        label: 'Guests per Table',
+                        data: tableData,
+                        backgroundColor: '#d4a5a5',
+                        borderColor: '#c98f8f',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Number of Guests' } },
+                        x: { title: { display: true, text: 'Table Number' } }
+                    }
+                }
+            });
+            // Guest List
+            updateGuestList('');
+        }
+        function updateGuestList(searchTerm) {
+            const filteredData = searchTerm
+                ? seatData.filter(g => g.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                : seatData;
+            guestTableBody.innerHTML = filteredData.map((guest, index) => `
+                <tr>
+                    <td>${guest.name}</td>
+                    <td>${guest.table}</td>
+                    <td>${guest.attendance ? 'Present' : 'Not Present'}</td>
+                    <td>
+                        <button class="rsvp-button toggle-attendance" data-index="${index}">
+                            Mark as ${guest.attendance ? 'Not Present' : 'Present'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            // Add event listeners to toggle buttons
+            document.querySelectorAll('.toggle-attendance').forEach(button => {
+                button.addEventListener('click', () => {
+                    const index = button.dataset.index;
+                    seatData[index].attendance = seatData[index].attendance ? 0 : 1;
+                    updateDashboard();
+                    console.warn('Attendance updated in-memory. Implement backend to persist changes.');
+                });
+            });
+        }
+        loadSeatData();
+        // Search Functionality
+        guestSearchInput.addEventListener('input', () => {
+            const searchTerm = guestSearchInput.value.trim();
+            updateGuestList(searchTerm);
+        });
+        // Download Guest List as PDF
+        downloadButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!seatData.length) {
+                guestTableBody.innerHTML = '<tr><td colspan="4" class="text-red-600 text-center">Guest data not loaded. Please try again.</td></tr>';
+                return;
+            }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(16);
+            doc.text('Aruni & Harshamal Wedding - Guest List', 20, 20);
+            doc.setFontSize(12);
+            let y = 30;
+            seatData.forEach(guest => {
+                doc.text(`${guest.name}: Table ${guest.table}, ${guest.attendance ? 'Present' : 'Not Present'}`, 20, y);
+                y += 10;
+                if (y > 270) {
+                    doc.addPage();
+                    y = 20;
+                }
+            });
+            doc.save('Aruni_Harshamal_Guest_List.pdf');
+        });
+    </script>
+</body>
+</html>

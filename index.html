@@ -7,17 +7,17 @@
     <link rel="icon" type="image/png" href="/logo.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: 'Lora', serif;
             background-color: #fffaf7;
             color: #333333;
         }
-
         h1, h2, h3 {
             font-family: 'Playfair Display', serif;
         }
-
         .hero-image {
             background-image: url('https://hdblob1.blob.core.windows.net/synconic/DSC_2547.jpg');
             background-size: cover;
@@ -25,164 +25,172 @@
             background-attachment: fixed;
             min-height: 100vh;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-            .hero-image::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
-                z-index: 1;
-            }
-
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+            z-index: 1;
+        }
         .hero-content {
             position: relative;
             z-index: 2;
-            padding: 2rem;
+            padding: 1.5rem;
             background: rgba(0, 0, 0, 0.7);
             border-radius: 0.5rem;
+            text-align: center;
+            max-width: 90%;
         }
-
         .logo {
-            max-width: 150px;
+            max-width: 120px;
             height: auto;
             margin: 0 auto 1rem;
         }
-
         .section-divider {
-            width: 100px;
+            width: 80px;
             height: 2px;
             background: #d4a5a5;
-            margin: 2rem auto;
+            margin: 1.5rem auto;
         }
-
-        .gallery-img {
-            transition: transform 0.3s ease;
-        }
-
-            .gallery-img:hover {
-                transform: scale(1.05);
-            }
-
         .fade-in {
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
-
-            .fade-in.visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
         .sticky-rsvp {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 15px;
+            right: 15px;
             z-index: 1000;
+            font-size: 0.9rem;
         }
-
-        .rsvp-input, .rsvp-select {
+        .rsvp-input {
             border: 1px solid #d4a5a5;
             border-radius: 0.5rem;
             padding: 0.75rem;
             width: 100%;
-            max-width: 400px;
+            max-width: 350px;
             margin: 0.5rem auto;
+            font-size: 1rem;
         }
-
         .rsvp-button {
             margin: 0.5rem;
+            background: #d4a5a5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: background 0.3s ease;
+            font-size: 0.9rem;
         }
-
+        .rsvp-button:hover {
+            background: #c98f8f;
+        }
         .loading::after {
             content: '';
             display: inline-block;
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             border: 2px solid #d4a5a5;
             border-top: 2px solid transparent;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
             margin-left: 0.5rem;
         }
-
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-
-        @media (max-width: 640px) {
-            .logo {
-                max-width: 100px;
-            }
-
-            .hero-content {
-                padding: 1rem;
-            }
-
-            .hero-image h1 {
-                font-size: 2.5rem;
-            }
-        }
-        @keyframes fadeInUp {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fade-in {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-
-        .detail-card {
+        .seat-result {
+            background: #fff;
             border: 1px solid #d4a5a5;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            max-width: 350px;
+            margin: 1rem auto;
+            font-size: 0.9rem;
         }
-
-            .detail-card:hover {
-                transform: scale(1.05);
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        .download-button {
+            background: #d4a5a5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: background 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .download-button:hover {
+            background: #c98f8f;
+        }
+        /* Mobile Navigation */
+        .nav-menu {
+            display: flex;
+        }
+        .nav-toggle {
+            display: none;
+        }
+        @media (max-width: 640px) {
+            .logo { max-width: 80px; }
+            .hero-content { padding: 1rem; }
+            .hero-image h1 { font-size: 2rem; }
+            .hero-image p { font-size: 0.9rem; }
+            .sticky-rsvp { font-size: 0.8rem; padding: 0.5rem 1rem; }
+            .rsvp-input, .seat-result, .download-button { max-width: 90%; }
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: #fff;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                padding: 1rem;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             }
+            .nav-menu.active {
+                display: flex;
+            }
+            .nav-toggle {
+                display: block;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: #d4a5a5;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="bg-white shadow-md fixed w-full top-0 z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
+            <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center">
-                    <img src="/logo.jpg" alt="Wedding Logo" class="logo" style="width:50px; margin:10px; margin-left:0px !important;">
-                    <h1 class="text-3xl font-playfair text-pink-800">Aruni & Harshamal</h1>
+                    <img src="/logo.jpg" alt="Wedding Logo" class="logo" style="width:40px; margin:10px; margin-left:0px !important;">
+                    <h1 class="text-2xl sm:text-3xl font-playfair text-pink-800">Aruni & Harshamal</h1>
                 </div>
-                <div class="flex items-center space-x-6">
-                    <a href="#home" class="text-pink-700 hover:text-pink-500 font-medium transition">Home</a>
-                    <!--<a href="#story" class="text-pink-700 hover:text-pink-500 font-medium transition">Our Story</a>-->
-                    <a href="#details" class="text-pink-700 hover:text-pink-500 font-medium transition">Details</a>
-                    <a href="#rsvp" class="text-pink-700 hover:text-pink-500 font-medium transition">RSVP</a>
-                    <a href="#gallery" class="text-pink-700 hover:text-pink-500 font-medium transition">Gallery</a>
-                    <!--<a href="#registry" class="text-pink-700 hover:text-pink-500 font-medium transition">Registry</a>-->
+                <div class="flex items-center">
+                    <div class="nav-menu flex items-center space-x-6">
+                        <a href="#home" class="text-pink-700 hover:text-pink-500 font-medium transition">Home</a>
+                        <a href="admin.html" class="text-pink-700 hover:text-pink-500 font-medium transition">Dashboard</a>
+                        <a href="#rsvp" class="text-pink-700 hover:text-pink-500 font-medium transition">Seat Finder</a>
+                    </div>
+                    <button class="nav-toggle">☰</button>
                 </div>
             </div>
         </div>
     </nav>
-
     <!-- Hero Section -->
-    <section id="home" class="hero-image flex items-center justify-center text-center text-white relative">
+    <section id="home" class="hero-image">
         <div id="heart-loader" class="absolute inset-0 flex items-center justify-center z-10 bg-black bg-opacity-50">
             <div class="heart-container">
                 <div class="heart">♡</div>
@@ -192,12 +200,12 @@
             </div>
         </div>
         <div class="hero-content">
-            <h1 class="text-4xl sm:text-6xl font-playfair mb-4 text-pink-100 flex items-center justify-center gap-2">
+            <h1 class="text-3xl sm:text-5xl font-playfair mb-4 text-pink-100 flex items-center justify-center gap-2">
                 Aruni <span class="text-pink-300 animate-pulse">♡</span> Harshamal
             </h1>
-            <p class="text-lg sm:text-xl text-gray-200">7th August 2025 | Grand Ballroom Hilton Colombo</p>
-            <p id="countdown" class="text-md sm:text-lg text-gray-300 mt-4"></p>
-            <a href="#rsvp" class="mt-6 inline-block bg-pink-600 text-white py-3 px-8 rounded-lg hover:bg-pink-700 transition">RSVP Now</a>
+            <p class="text-base sm:text-lg text-gray-200">7th August 2025 | Grand Ballroom Hilton Colombo</p>
+            <p id="countdown" class="text-sm sm:text-base text-gray-300 mt-4"></p>
+            <a href="#rsvp" class="mt-4 inline-block bg-pink-600 text-white py-2 px-6 rounded-lg hover:bg-pink-700 transition text-sm sm:text-base">Find Your Seat</a>
         </div>
         <style>
             .heart-container {
@@ -208,50 +216,21 @@
                 justify-content: center;
                 align-items: center;
             }
-
             .heart {
                 position: absolute;
-                font-size: 2rem;
+                font-size: 1.5rem;
                 color: #d4a5a5;
                 animation: floatHeart 3s infinite ease-in-out;
                 opacity: 0;
             }
-
-                .heart:nth-child(1) {
-                    animation-delay: 0s;
-                    transform: translate(-40px, 0);
-                }
-
-                .heart:nth-child(2) {
-                    animation-delay: 0.5s;
-                    transform: translate(0, 0);
-                }
-
-                .heart:nth-child(3) {
-                    animation-delay: 1s;
-                    transform: translate(40px, 0);
-                }
-
-                .heart:nth-child(4) {
-                    animation-delay: 1.5s;
-                    transform: translate(20px, 0);
-                }
-
+            .heart:nth-child(1) { animation-delay: 0s; transform: translate(-40px, 0); }
+            .heart:nth-child(2) { animation-delay: 0.5s; transform: translate(0, 0); }
+            .heart:nth-child(3) { animation-delay: 1s; transform: translate(40px, 0); }
+            .heart:nth-child(4) { animation-delay: 1.5s; transform: translate(20px, 0); }
             @keyframes floatHeart {
-                0% {
-                    opacity: 0;
-                    transform: translateY(0) scale(1);
-                }
-
-                50% {
-                    opacity: 1;
-                    transform: translateY(-100px) scale(1.5);
-                }
-
-                100% {
-                    opacity: 0;
-                    transform: translateY(-200px) scale(1);
-                }
+                0% { opacity: 0; transform: translateY(0) scale(1); }
+                50% { opacity: 1; transform: translateY(-80px) scale(1.3); }
+                100% { opacity: 0; transform: translateY(-160px) scale(1); }
             }
         </style>
         <script>
@@ -263,140 +242,48 @@
             img.onload = () => {
                 heartLoader.style.transition = 'opacity 0.5s ease-out';
                 heartLoader.style.opacity = '0';
-                setTimeout(() => {
-                    heartLoader.style.display = 'none';
-                }, 500);
+                setTimeout(() => { heartLoader.style.display = 'none'; }, 500);
             };
             img.onerror = () => {
                 heartLoader.style.transition = 'opacity 0.5s ease-out';
                 heartLoader.style.opacity = '0';
-                setTimeout(() => {
-                    heartLoader.style.display = 'none';
-                }, 500);
+                setTimeout(() => { heartLoader.style.display = 'none'; }, 500);
             };
         </script>
     </section>
-
-    <!-- Wedding Details Section -->
-    <section id="details" class="bg-gray-50 py-20 fade-in">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-4xl sm:text-5xl font-playfair text-center text-pink-800 mb-6 relative">
-                Wedding Details
-                <span class="block w-16 h-1 bg-pink-300 mt-2 mx-auto"></span>
-            </h2>
-            <div class="section-divider"></div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="detail-card bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 opacity-0 animate-fade-in" style="animation-delay: 0.1s;">
-                    <h3 class="text-2xl font-bold text-pink-800 mb-2 flex items-center justify-center">
-                        <span class="mr-2 text-pink-300">📅</span> Date & Time
-                    </h3>
-                    <p class="text-gray-600">7th August 2025 at 6:00 PM</p>
-                </div>
-                <div class="detail-card bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 opacity-0 animate-fade-in" style="animation-delay: 0.3s;">
-                    <h3 class="text-2xl font-bold text-pink-800 mb-2 flex items-center justify-center">
-                        <span class="mr-2 text-pink-300">🏛️</span> Venue
-                    </h3>
-                    <p class="text-gray-600">Grand Ballroom, Hilton Colombo, 2 Sir Chittampalam A Gardiner Mawatha, Colombo 00200, Sri Lanka</p>
-                </div>
-                <div class="detail-card bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 opacity-0 animate-fade-in" style="animation-delay: 0.5s;">
-                    <h3 class="text-2xl font-bold text-pink-800 mb-2 flex items-center justify-center">
-                        <span class="mr-2 text-pink-300">👗</span> Dress Code
-                    </h3>
-                    <p class="text-gray-600">Formal or Traditional Attire</p>
-                </div>
-            </div>
-            <div class="mt-12 text-center opacity-0 animate-fade-in" style="animation-delay: 0.7s;">
-                <h3 class="text-2xl font-bold text-pink-800 mb-4">Find Us</h3>
-                <div class="max-w-4xl mx-auto">
-                    <iframe class="w-full h-96 rounded-lg border border-pink-300 shadow-sm" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.781395141506!2d79.84468391462114!3d6.93171119500062!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2599770171135%3A0x2696362ff7c93a76!2sHilton%20Ballroom!5e0!3m2!1sen!2slk!4v1731512345678!5m2!1sen!2slk" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    <a href="https://www.google.com/maps/place/Hilton+Ballroom/@6.932165,79.8451322,16.5z/data=!4m6!3m5!1s0x3ae2599770171135:0x2696362ff7c93a76!8m2!3d6.931711!4d79.8446839!16s%2Fg%2F11gw36gs00?hl=en&entry=ttu&g_ep=EgoyMDI1MDcxMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="inline-block mt-4 text-pink-600 hover:text-pink-800 font-medium transition">Get Directions</a>
-                </div>
-            </div>
-        </div>
-        <style>
-            @keyframes fadeInUp {
-                0% {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-
-                100% {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            .animate-fade-in {
-                animation: fadeInUp 0.6s ease-out forwards;
-            }
-
-            .detail-card {
-                border: 1px solid #d4a5a5;
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-            }
-
-                .detail-card:hover {
-                    transform: scale(1.05);
-                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-                }
-        </style>
-    </section>
-
-    <!-- RSVP Section -->
-    <section id="rsvp" class="py-20 bg-white fade-in">
+    <!-- Seat Finder Section -->
+    <section id="rsvp" class="py-16 bg-white fade-in">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-4xl sm:text-5xl font-playfair text-center text-pink-800 mb-6">RSVP</h2>
+            <h2 class="text-3xl sm:text-4xl font-playfair text-pink-800 mb-6">Seat Finder</h2>
             <div class="section-divider"></div>
-            <p class="text-gray-600 max-w-2xl mx-auto mb-6 text-lg">
-                Please provide your details below to RSVP for our wedding by 25th July 2025.
+            <p class="text-gray-600 max-w-xl mx-auto mb-6 text-sm sm:text-base">
+                Enter your name to find your table number and mark your attendance. Attendance updates are recorded by event staff and downloadable as an updated seating chart.
             </p>
-            <div class="max-w-2xl mx-auto">
-                <input type="text" id="rsvpName" placeholder="Your Name" class="rsvp-input mb-4 text-gray-700">
-                <select id="rsvpGuests" class="rsvp-select mb-4 text-gray-700">
-                    <option value="1">1 Guest</option>
-                    <option value="2">2 Guests</option>
-                </select>
-                <select id="rsvpDrink" class="rsvp-select mb-4 text-gray-700">
-                    <option value="Nonalcoholic">Nonalcoholic</option>
-                    <option value="Alcoholic">Alcoholic</option>
-                </select>
-                <button id="rsvpSubmit" class="rsvp-button bg-pink-600 text-white py-2 px-6 rounded-lg hover:bg-pink-700 transition rsvp-select mb-4 text-gray-700">Submit RSVP</button>
-                <div id="rsvpMessage" class="mt-4"></div>
+            <div class="max-w-xl mx-auto">
+                <div id="loading" class="text-gray-600 mb-4 hidden">Loading seating data<span class="loading"></span></div>
+                <input type="text" id="seatSearch" placeholder="Search by Name" class="rsvp-input mb-4 text-gray-700">
+                <div id="seatResult" class="seat-result hidden"></div>
+                <a href="#" id="downloadChart" class="download-button inline-block mt-4">Download Seating Chart</a>
             </div>
         </div>
     </section>
-
-    <!-- Photo Gallery Section -->
-    <section id="gallery" class="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8 fade-in">
-        <h2 class="text-4xl sm:text-5xl font-playfair text-center text-pink-800 mb-6">Our Moments</h2>
-        <div class="section-divider"></div>
-        <div class="columns-1 sm:columns-2 md:columns-3 gap-4">
-            <img src="/DSC_2577.jpg" alt="Moment 1" class="w-full h-auto object-cover rounded-lg mb-4 gallery-img">
-            <img src="/DSC_2425.jpg" alt="Moment 2" class="w-full h-auto object-cover rounded-lg mb-4 gallery-img">
-            <img src="/DSC_2536.jpg" alt="Moment 3" class="w-full h-auto object-cover rounded-lg mb-4 gallery-img">
-            <img src="/DSC_2551.jpg" alt="Moment 4" class="w-full h-auto object-cover rounded-lg mb-4 gallery-img">
-            <img src="/DSC_2555.jpg" alt="Moment 5" class="w-full h-auto object-cover rounded-lg mb-4 gallery-img">
-        </div>
-    </section>
-
     <!-- Footer -->
-    <footer class="bg-pink-900 text-white py-10">
+    <footer class="bg-pink-900 text-white py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-xl font-playfair">Aruni & Harshamal | 7th August 2025</p>
-            <p class="mt-2 text-sm">Crafted with love for our special day</p>
-            <!--<div class="mt-4 flex justify-center space-x-4">
-                <a href="https://www.facebook.com/sharer/sharer.php?u=https://aruniharshamal.netlify.app" target="_blank" class="text-gray-300 hover:text-white transition">Facebook</a>
-                <a href="https://twitter.com/intent/tweet?url=https://aruniharshamal.netlify.app&text=Join%20us%20for%20Aruni%20%26%20Harshamal's%20wedding!" target="_blank" class="text-gray-300 hover:text-white transition">Twitter</a>
-                <a href="https://www.instagram.com/" target="_blank" class="text-gray-300 hover:text-white transition">Instagram</a>
-            </div>-->
+            <p class="text-lg sm:text-xl font-playfair">Aruni & Harshamal | 7th August 2025</p>
+            <p class="mt-2 text-xs sm:text-sm">Crafted with love for our special day</p>
         </div>
     </footer>
-
     <!-- Sticky RSVP Button -->
-    <a href="#rsvp" class="sticky-rsvp bg-pink-600 text-white py-3 px-6 rounded-full hover:bg-pink-700 transition text-sm sm:text-base">RSVP</a>
-
+    <a href="#rsvp" class="sticky-rsvp bg-pink-600 text-white py-2 px-4 rounded-full hover:bg-pink-700 transition text-sm">Find Your Seat</a>
     <!-- Scripts -->
     <script>
+        // Navigation Toggle for Mobile
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
         // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -404,9 +291,11 @@
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
+                if (window.innerWidth <= 640) {
+                    navMenu.classList.remove('active');
+                }
             });
         });
-
         // Fade-In Animation
         const fadeInElements = document.querySelectorAll('.fade-in');
         const observer = new IntersectionObserver((entries) => {
@@ -417,7 +306,6 @@
             });
         }, { threshold: 0.1 });
         fadeInElements.forEach(el => observer.observe(el));
-
         // Countdown Timer
         const weddingDate = new Date('August 7, 2025 18:00:00').getTime();
         function updateCountdown() {
@@ -434,56 +322,106 @@
         }
         setInterval(updateCountdown, 1000);
         updateCountdown();
-
-        // RSVP Form
-        const rsvpNameInput = document.getElementById('rsvpName');
-        const rsvpGuestsSelect = document.getElementById('rsvpGuests');
-        const rsvpDrinkSelect = document.getElementById('rsvpDrink');
-        const rsvpSubmitButton = document.getElementById('rsvpSubmit');
-        const rsvpMessage = document.getElementById('rsvpMessage');
-        const formActionUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfI5p4hfwd2r5X-dR9IybM1ziHyEMy9BxoYuu2RKc8uvEXmeg/formResponse';
-
-        rsvpSubmitButton.addEventListener('click', async () => {
-            const name = rsvpNameInput.value.trim();
-            const guests = rsvpGuestsSelect.value;
-            const drink = rsvpDrinkSelect.value;
-
-            rsvpSubmitButton.classList.add('loading');
-            rsvpSubmitButton.disabled = true;
-
+        // Seat Finder Functionality
+        let seatData = [];
+        let workbook;
+        let firstSheetName;
+        const loadingDiv = document.getElementById('loading');
+        const seatSearchInput = document.getElementById('seatSearch');
+        const seatResultDiv = document.getElementById('seatResult');
+        const downloadButton = document.getElementById('downloadChart');
+        async function loadSeatData() {
+            loadingDiv.classList.remove('hidden');
             try {
-                // Validate inputs
-                if (!name) {
-                    rsvpMessage.innerHTML = '<p class="text-red-600">Please enter your name.</p>';
-                    return;
-                }
-
-                // Prepare form data
-                const formData = new FormData();
-                formData.append('entry.16878694', name);
-                formData.append('entry.1727004440', guests);
-                formData.append('entry.584873527', drink);
-
-                // Send POST request to Google Form
-                const response = await fetch(formActionUrl, {
-                    method: 'POST',
-                    mode: 'no-cors', // Required for Google Forms submission
-                    body: formData
-                });
-
-                // Clear form
-                rsvpNameInput.value = '';
-                rsvpGuestsSelect.value = '1';
-                rsvpDrinkSelect.value = 'Nonalcoholic';
-
-                // Show success message
-                rsvpMessage.innerHTML = '<p class="text-green-600">Thank you for your RSVP!</p>';
+                const response = await fetch('/seating.xlsx');
+                if (!response.ok) throw new Error('Failed to load seating.xlsx');
+                const arrayBuffer = await response.arrayBuffer();
+                workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                firstSheetName = workbook.SheetNames[0];
+                const firstSheet = workbook.Sheets[firstSheetName];
+                const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+                seatData = jsonData.map(row => ({
+                    name: String(row.Name || ''),
+                    table: Number(row.Table || 0),
+                    attendance: Number(row.Attendance || 0)
+                }));
+                loadingDiv.classList.add('hidden');
+                downloadButton.classList.remove('hidden');
             } catch (error) {
-                rsvpMessage.innerHTML = `<p class="text-red-600">Error submitting RSVP: ${error.message}. Please try again.</p>`;
-            } finally {
-                rsvpSubmitButton.classList.remove('loading');
-                rsvpSubmitButton.disabled = false;
+                console.error('Error loading seating data:', error);
+                loadingDiv.classList.add('hidden');
+                seatResultDiv.classList.remove('hidden');
+                seatResultDiv.innerHTML = '<p class="text-red-600">Error loading seating data. Please try again later.</p>';
             }
+        }
+        function saveSeatData() {
+            const ws = XLSX.utils.json_to_sheet(seatData);
+            workbook.Sheets[firstSheetName] = ws;
+            const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            const blob = new Blob([wbout], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'seating_updated.xlsx';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        loadSeatData();
+        seatSearchInput.addEventListener('input', () => {
+            const searchTerm = seatSearchInput.value.trim().toLowerCase();
+            seatResultDiv.classList.add('hidden');
+            if (searchTerm.length < 2) return;
+            const guest = seatData.find(g => g.name.toLowerCase().includes(searchTerm));
+            if (guest) {
+                seatResultDiv.classList.remove('hidden');
+                seatResultDiv.innerHTML = `
+                    <p class="text-gray-700 mb-2"><strong>Name:</strong> ${guest.name}</p>
+                    <p class="text-gray-700 mb-2"><strong>Table:</strong> ${guest.table}</p>
+                    <p class="text-gray-700 mb-2"><strong>Attendance:</strong> ${guest.attendance ? 'Present' : 'Not Present'}</p>
+                    ${guest.attendance ? '' : '<button id="markPresent" class="rsvp-button">Mark as Present</button>'}
+                `;
+                const markPresentButton = document.getElementById('markPresent');
+                if (markPresentButton) {
+                    markPresentButton.addEventListener('click', () => {
+                        guest.attendance = 1;
+                        saveSeatData();
+                        seatResultDiv.innerHTML = `
+                            <p class="text-gray-700 mb-2"><strong>Name:</strong> ${guest.name}</p>
+                            <p class="text-gray-700 mb-2"><strong>Table:</strong> ${guest.table}</p>
+                            <p class="text-gray-700 mb-2"><strong>Attendance:</strong> Present</p>
+                            <p class="text-green-600">Attendance marked successfully! Download the updated seating chart to save changes.</p>
+                        `;
+                    });
+                }
+            } else {
+                seatResultDiv.classList.remove('hidden');
+                seatResultDiv.innerHTML = '<p class="text-red-600">Guest not found. Please check the name and try again.</p>';
+            }
+        });
+        // Download Seating Chart as PDF
+        downloadButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!seatData.length) {
+                seatResultDiv.classList.remove('hidden');
+                seatResultDiv.innerHTML = '<p class="text-red-600">Seating data not loaded. Please try again.</p>';
+                return;
+            }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(16);
+            doc.text('Aruni & Harshamal Wedding - Seating Chart', 20, 20);
+            doc.setFontSize(12);
+            let y = 30;
+            seatData.forEach(guest => {
+                doc.text(`${guest.name}: Table ${guest.table}`, 20, y);
+                y += 10;
+                if (y > 270) {
+                    doc.addPage();
+                    y = 20;
+                }
+            });
+            doc.save('Aruni_Harshamal_Seating_Chart.pdf');
         });
     </script>
 </body>
