@@ -357,7 +357,7 @@ Ishara,36,0
 Kavin Vithanage,36,0
 Madhawa Madhawala,36,0
 Nethuki Kulasinghe,36,0
-Sajini Wickramasinghe,36,1
+Sajini Wickramasinghe,36,0
 Shaveen Thilakarathne,36,0
 Tharini Gunatunge,36,0
 Aroshana Herath,37,0
@@ -370,7 +370,7 @@ Ramaya Gunarathne,37,0
 Shanali Lokugamage,37,0
 Thanushka Wijesinghe,37,0
 Vihanga Habaragamuwa,37,0
-Dushan Kariyawasam,38,1
+Dushan Kariyawasam,38,0
 Kosala Dushyantha,38,0
 Lahiru Kariyawasam,38,0
 Mrs. Kariyawasam,38,0
