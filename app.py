@@ -56,7 +56,7 @@ HOME_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aruni & Harshamal's Wedding</title>
+    <title>Linasha & Ransumal's Wedding</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="icon" href="https://cdn.pixabay.com/photo/2016/02/14/09/48/heart-1199242_1280.png">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -89,7 +89,7 @@ HOME_TEMPLATE = """
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 bg-gray-900 bg-opacity-50">
     <div class="frosted-glass p-8 max-w-lg w-full">
-        <h1 class="text-4xl font-bold text-center text-gray-800 mb-6 font-serif">Aruni & Harshamal's Wedding</h1>
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-6 font-serif">Linasha & Ransumal's Wedding</h1>
         <p class="text-center text-gray-600 mb-6">Welcome to our special day! Find your seat below.</p>
         {% if error %}
         <div class="mb-4 p-4 bg-red-100 text-red-800 rounded-lg text-center">
