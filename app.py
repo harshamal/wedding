@@ -66,48 +66,199 @@ HOME_TEMPLATE = """
             background-size: contain;
             background-attachment: fixed;
             background-position: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* Animated gradient overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(244, 114, 182, 0.2), rgba(249, 168, 212, 0.2), rgba(255, 255, 255, 0.3));
+            animation: gradientShift 15s ease infinite;
+            z-index: -1;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        /* Sparkle effect */
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: sparkle 3s infinite ease-in-out;
+            pointer-events: none;
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
         }
         .frosted-glass {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
             border-radius: 20px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: fadeInUp 1s ease-out;
         }
-        .btn-primary {
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .btn-primary, .btn-table {
             background: linear-gradient(to right, #f472b6, #f9a8d4);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .btn-primary:hover {
+        .btn-primary:hover, .btn-table:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.5);
+            background: linear-gradient(to right, #ec4899, #f472b6);
+        }
+        .btn-primary::after, .btn-table::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%) scale(0);
+            border-radius: 50%;
+            transition: transform 0.5s ease;
+        }
+        .btn-primary:active::after, .btn-table:active::after {
+            transform: translate(-50%, -50%) scale(1);
+            transition: transform 0.3s ease;
         }
         input:focus {
             box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.3);
+            transform: scale(1.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        #autocomplete-list div {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-container {
+            animation: slideInResult 0.5s ease-out;
+        }
+        @keyframes slideInResult {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        /* Modal for table arrangement */
+        .modal {
+            display: flex;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow: auto;
+            position: relative;
+            animation: zoomIn 0.5s ease-out;
+        }
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal img {
+            max-width: 100%;
+            max-height: 80vh;
+            height: auto;
+            border-radius: 5px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            color: #333;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .close-btn:hover {
+            color: #f472b6;
+        }
+        /* Mobile adjustments */
+        @media (max-width: 640px) {
+            .frosted-glass {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .modal-content {
+                max-width: 95%;
+                max-height: 85vh;
+            }
+            .modal img {
+                max-height: 75vh;
+            }
         }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 bg-gray-900 bg-opacity-50">
+    <!-- Sparkle elements -->
+    <div class="sparkle" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+    <div class="sparkle" style="top: 30%; left: 80%; animation-delay: 1s;"></div>
+    <div class="sparkle" style="top: 70%; left: 30%; animation-delay: 2s;"></div>
+    <div class="sparkle" style="top: 50%; left: 50%; animation-delay: 1.5s;"></div>
     <div class="frosted-glass p-8 max-w-lg w-full">
         <h1 class="text-4xl font-bold text-center text-gray-800 mb-6 font-serif">Linasha & Ransumal's Wedding</h1>
-        <p class="text-center text-gray-600 mb-6">Welcome to our special day! Find your seat below.</p>
+        <p class="text-center text-gray-600 mb-6 animate-pulse">Welcome to our special day! Find your seat below.</p>
         {% if error %}
-        <div class="mb-4 p-4 bg-red-100 text-red-800 rounded-lg text-center">
+        <div class="mb-4 p-4 bg-red-100 text-red-800 rounded-lg text-center animate-pulse">
             {{ error }}
         </div>
         {% endif %}
         <form method="get" class="space-y-4">
             <div class="relative">
-                <input type="text" id="guest" name="guest" placeholder="Enter your name" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 text-gray-800" required autocomplete="off">
+                <input type="text" id="guest" name="guest" placeholder="Enter your name" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 text-gray-800 transition-all duration-200" required autocomplete="off">
                 <div id="autocomplete-list" class="absolute w-full max-h-40 overflow-y-auto bg-white border rounded-lg shadow-lg mt-1 hidden z-10"></div>
             </div>
-            <button class="w-full btn-primary text-white p-4 rounded-lg font-semibold">Find My Seat</button>
+            <button class="w-full btn-primary text-white p-4 rounded-lg font-semibold relative">Find My Seat</button>
         </form>
         {% if result %}
-        <div class="mt-6 p-4 bg-white rounded-lg shadow text-center text-gray-800">
+        <div class="mt-6 p-4 bg-white rounded-lg shadow text-center text-gray-800 result-container">
             <p>{{ result }}</p>
         </div>
         {% endif %}
+        <button id="view-table-arrangement" class="mt-4 w-full btn-table text-white p-4 rounded-lg font-semibold relative">View Table Arrangement</button>
+    </div>
+    <!-- Modal for table arrangement -->
+    <div id="table-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <img src="/static/tablearrangement.jpg" alt="Table Arrangement" />
+        </div>
     </div>
     <script>
         $(document).ready(function() {
@@ -127,10 +278,34 @@ HOME_TEMPLATE = """
                         $('#autocomplete-list').addClass('hidden');
                     }
                 });
-                $('#autocomplete-list').on('click', 'div', function() {
-                    $('#guest').val($(this).text());
-                    $('#autocomplete-list').addClass('hidden');
+            });
+            $('#autocomplete-list').on('click', 'div', function() {
+                $('#guest').val($(this).text());
+                $('#autocomplete-list').addClass('hidden');
+            });
+            // Sparkle effect on button click
+            $('.btn-primary, .btn-table').on('click', function() {
+                let btn = $(this);
+                let sparkle = $('<div class="sparkle"></div>').css({
+                    top: btn.offset().top + btn.height() / 2,
+                    left: btn.offset().left + btn.width() / 2,
+                    position: 'absolute'
                 });
+                $('body').append(sparkle);
+                setTimeout(() => sparkle.remove(), 3000);
+            });
+            // Modal toggle
+            $('#view-table-arrangement').on('click', function() {
+                $('#table-modal').css('display', 'flex').fadeIn(300);
+            });
+            $('.close-btn').on('click', function() {
+                $('#table-modal').fadeOut(300);
+            });
+            // Close modal when clicking outside
+            $(window).on('click', function(event) {
+                if (event.target.id === 'table-modal') {
+                    $('#table-modal').fadeOut(300);
+                }
             });
         });
     </script>
