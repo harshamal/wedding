@@ -8,7 +8,8 @@ from io import StringIO
 import re
 import logging
 import hashlib
-
+from io import BytesIO
+from flask import send_file
 app = Flask(__name__, static_folder='static', static_url_path='/static')
 
 # Configure logging
@@ -757,21 +758,36 @@ def toggle_attendance():
     return jsonify({'error': 'Name not found'}), 404
 
 @app.route('/export_csv')
+
 def export_csv():
     with lock:
-        output = StringIO()
-        writer = csv.writer(output)
+        # Step 1: Create a StringIO for CSV writing
+        text_output = StringIO()
+        writer = csv.writer(text_output)
         writer.writerow(['Name', 'Title', 'Table No', 'Attendance'])
+        
         for name, info in seating_map.items():
             if name != 'error':
-                writer.writerow([name.title(), info['title'], info['table'], 'Present' if info['attendance'] else 'Absent'])
-        output.seek(0)
-    return send_file(
-        output,
-        mimetype='text/csv',
-        as_attachment=True,
-        download_name='seating_data.csv'
-    )
+                writer.writerow([
+                    name.title(),
+                    info['title'],
+                    info['table'],
+                    'Present' if info['attendance'] else 'Absent'
+                ])
+        
+        # Step 2: Convert StringIO to BytesIO
+        binary_output = BytesIO()
+        binary_output.write(text_output.getvalue().encode('utf-8'))
+        binary_output.seek(0)
+        
+        # Step 3: Send the file
+        return send_file(
+            binary_output,
+            mimetype='text/csv',
+            as_attachment=True,
+            download_name='seating_data.csv'
+        )
+
 
 if __name__ == '__main__':
     app.run(debug=True)

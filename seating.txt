@@ -160,7 +160,7 @@ Mr. Gunathilaka Bandara,18,0
 Mr. Jayantha Bandara,18,0
 Dr. Piyumal Jayasinghe,19,0
 Mrs. Sharala Jayakumara,19,0
-Mr. Jeromy Jayamanne,19,1
+Mr. Jeromy Jayamanne,19,0
 Dr. Samanmalie Jayasinghe,19,0
 Miss. Yovanthi Jayasinghe,19,0
 Mr. Dasith Gallella,19,0
